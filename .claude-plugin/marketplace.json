@@ -1,0 +1,22 @@
+{
+  "name": "cesiumjs-skills",
+  "owner": {
+    "name": "CesiumGS"
+  },
+  "metadata": {
+    "description": "CesiumJS 领域技能，涵盖 CesiumJS v1.139 API 表面约 535 个公共符号"
+  },
+  "plugins": [
+    {
+      "name": "cesiumjs-skills",
+      "source": "./",
+      "description": "14 个 CesiumJS 开发领域技能，附带 SessionStart 钩子和 Chrome DevTools MCP 集成",
+      "version": "0.3.0",
+      "category": "development",
+      "tags": ["cesium", "cesiumjs", "3d", "geospatial", "gis", "maps"],
+      "license": "Apache-2.0",
+      "homepage": "https://github.com/CesiumGS/cesiumjs-skills",
+      "repository": "https://github.com/CesiumGS/cesiumjs-skills"
+    }
+  ]
+}

@@ -1,0 +1,40 @@
+#!/usr/bin/env bash
+# cesiumjs-skills 插件的 SessionStart 钩子
+
+set -euo pipefail
+
+# 确定插件根目录
+SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
+PLUGIN_ROOT="$(cd "${SCRIPT_DIR}/.." && pwd)"
+
+# 读取 using-cesiumjs-skills 内容
+skill_content=$(cat "${PLUGIN_ROOT}/skills/using-cesiumjs-skills/SKILL.md" 2>&1 || echo "读取 using-cesiumjs-skills 技能时出错")
+
+# 使用 bash 参数替换进行 JSON 字符串转义
+escape_for_json() {
+    local s="$1"
+    s="${s//\\/\\\\}"
+    s="${s//\"/\\\"}"
+    s="${s//$'\n'/\\n}"
+    s="${s//$'\r'/\\r}"
+    s="${s//$'\t'/\\t}"
+    printf '%s' "$s"
+}
+
+skill_escaped=$(escape_for_json "$skill_content")
+session_context="您可以使用 CesiumJS 领域技能。\n\n**以下是 cesiumjs-skills 插件的定向说明。技能会自动激活 —— 无需显式调用。**\n\n${skill_escaped}"
+
+# 以 JSON 格式输出上下文注入。
+# Claude Code 期望 hookSpecificOutput.additionalContext（嵌套格式）。
+# Cursor 期望 additional_context（蛇形命名）。
+# Copilot CLI 和其他工具期望 additionalContext（顶层，SDK 标准）。
+# 使用 printf 代替 here-doc，以规避 bash 5.3+ 的 here-doc 挂起问题。
+if [ -n "${CURSOR_PLUGIN_ROOT:-}" ]; then
+  printf '{\n  "additional_context": "%s"\n}\n' "$session_context"
+elif [ -n "${CLAUDE_PLUGIN_ROOT:-}" ] && [ -z "${COPILOT_CLI:-}" ]; then
+  printf '{\n  "hookSpecificOutput": {\n    "hookEventName": "SessionStart",\n    "additionalContext": "%s"\n  }\n}\n' "$session_context"
+else
+  printf '{\n  "additionalContext": "%s"\n}\n' "$session_context"
+fi
+
+exit 0
