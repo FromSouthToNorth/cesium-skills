@@ -1,5 +1,9 @@
 # CesiumJS Agent Skills
 
+[Original CesiumJS Agent Skills](https://github.com/CesiumGS/cesiumjs-skills)
+
+[Cesium AI Integrations](https://github.com/CesiumGS/cesium-ai-integrations)
+
 精选的 CesiumJS 开发代理技能 —— 涵盖 CesiumJS v1.139 API 表面的 14 个领域技能，约 535 个公共符号。
 
 ## 快速开始
